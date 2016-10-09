@@ -32,15 +32,10 @@ public class MotorControllerImpl implements MotorController {
 
         this.duration = duration;
         this.value = value;
-        this.refresh();
     }
 
-    public synchronized void decrementDuration() {
-        this.duration -= 1;
-        this.refresh();
-    }
-
-    private void refresh() {
+    public synchronized void refresh() {
         this.pinManager.setPwm(this.pwmChannel, this.duration > 0 ? this.value : 0);
+        this.duration -= 1;
     }
 }

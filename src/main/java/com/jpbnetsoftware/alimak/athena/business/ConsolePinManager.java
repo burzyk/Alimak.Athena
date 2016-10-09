@@ -1,6 +1,5 @@
 package com.jpbnetsoftware.alimak.athena.business;
 
-import com.apple.eawt.AppEvent;
 import com.jpbnetsoftware.alimak.athena.PinManager;
 
 /**

@@ -6,5 +6,5 @@ package com.jpbnetsoftware.alimak.athena;
 public interface MotorController {
     void setValue(float value, int duration);
 
-    void decrementDuration();
+    void refresh();
 }
