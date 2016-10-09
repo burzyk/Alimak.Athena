@@ -19,8 +19,8 @@ public class Program {
 
     @Bean
     public CarManager carManager() {
-        // PinManager pinManager = new PiPinManager();
-        PinManager pinManager = new ConsolePinManager();
+        PinManager pinManager = new PiPinManager();
+        //PinManager pinManager = new ConsolePinManager();
         return new CarManagerImpl(new MotorControllerImpl(0, pinManager), new MotorControllerImpl(1, pinManager));
     }
 }

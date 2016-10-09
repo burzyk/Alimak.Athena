@@ -24,13 +24,13 @@ public class CarManagerImpl implements CarManager {
     @Override
     public void drive(float speed, int duration) {
         this.init();
-        this.driveController.setValue(speed, duration * RESOLUTION);
+        this.driveController.setValue(speed, duration / RESOLUTION);
     }
 
     @Override
     public void turn(float turnPercentage, int duration) {
         this.init();
-        this.turnController.setValue(turnPercentage, duration * RESOLUTION);
+        this.turnController.setValue(turnPercentage, duration / RESOLUTION);
     }
 
     private void init() {
@@ -44,7 +44,7 @@ public class CarManagerImpl implements CarManager {
                 turnController.refresh();
 
                 try {
-                    Thread.sleep(1000 / RESOLUTION);
+                    Thread.sleep(RESOLUTION);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
