@@ -14,12 +14,24 @@ import java.io.IOException;
 public class Program {
     public static void main(String[] arguments) throws InterruptedException, IOException {
         Log log = new ConsoleLog();
-        PinManager pinManager = new ConsolePinManager(log);
+        PinManager pinManager = createPinManager(log);
         CarManager carManager = new CarManagerImpl(new MotorControllerImpl(0, 1, pinManager), new MotorControllerImpl(2, 3, pinManager));
         ControlServer server = new UdpServer(carManager, log);
 
         server.start();
         System.in.read();
         server.stop();
+    }
+
+    private static PinManager createPinManager(Log log) {
+        String pinManager = System.getProperty("PinManager");
+
+        if (pinManager != null && pinManager.equals("local")) {
+            log.info("Using local pin manager");
+            return new ConsolePinManager(log);
+        } else {
+            log.info("Using raspberry pin manager");
+            return new PiPinManager();
+        }
     }
 }
