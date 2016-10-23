@@ -12,12 +12,15 @@ public class MotorControllerImpl implements MotorController {
 
     private int duration;
 
-    private int pwmChannel;
+    private final int pwmChannelLeft;
+
+    private final int pwmChannelRight;
 
     private PinManager pinManager;
 
-    public MotorControllerImpl(int pwmChannel, PinManager pinManager) {
-        this.pwmChannel = pwmChannel;
+    public MotorControllerImpl(int pwmChannelLeft, int pwmChannelRight, PinManager pinManager) {
+        this.pwmChannelLeft = pwmChannelLeft;
+        this.pwmChannelRight = pwmChannelRight;
         this.pinManager = pinManager;
     }
 
@@ -26,16 +29,21 @@ public class MotorControllerImpl implements MotorController {
             throw new IllegalArgumentException();
         }
 
-        if (value < 0) {
-            throw new IllegalArgumentException("negative values are not implemented");
-        }
-
         this.duration = duration;
         this.value = value;
     }
 
     public synchronized void refresh() {
-        this.pinManager.setPwm(this.pwmChannel, this.duration > 0 ? this.value : 0);
+
+        if (this.duration <= 0) {
+            this.pinManager.setPwm(this.pwmChannelLeft, 0);
+            this.pinManager.setPwm(this.pwmChannelRight, 0);
+
+            return;
+        }
+
+        this.pinManager.setPwm(this.pwmChannelLeft, this.value > 0 ? this.value : 0);
+        this.pinManager.setPwm(this.pwmChannelRight, this.value < 0 ? -this.value : 0);
         this.duration -= 1;
     }
 }

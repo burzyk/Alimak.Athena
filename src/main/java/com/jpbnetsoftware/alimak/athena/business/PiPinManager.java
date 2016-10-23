@@ -2,6 +2,8 @@ package com.jpbnetsoftware.alimak.athena.business;
 
 import com.jpbnetsoftware.alimak.athena.PinManager;
 import com.pi4j.io.gpio.*;
+import com.pi4j.wiringpi.Gpio;
+import com.pi4j.wiringpi.SoftPwm;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,11 +13,17 @@ import java.util.Map;
  */
 public class PiPinManager implements PinManager {
 
-    private Map<Integer, GpioPinPwmOutput> pwmChannels = new HashMap<>();
+    private int[] pinConfiguration;
+
+    private boolean isInitialized;
+
+    public PiPinManager() {
+        this.pinConfiguration = new int[]{0, 1, 2, 3};
+    }
 
     @Override
     public synchronized void setPwm(int channel, float value) {
-        if (channel != 0 && channel != 1) {
+        if (channel > this.pinConfiguration.length) {
             throw new IllegalArgumentException("channel must be {0, 1}");
         }
 
@@ -23,14 +31,16 @@ public class PiPinManager implements PinManager {
             throw new IllegalArgumentException("value must be in range [0, 1]");
         }
 
-        if (!this.pwmChannels.containsKey(channel)) {
-            Pin pinId = channel == 0 ? RaspiPin.GPIO_01 : RaspiPin.GPIO_23;
-            GpioPinPwmOutput pin = GpioFactory.getInstance().provisionPwmOutputPin(pinId);
-            pin.setShutdownOptions(true, PinState.LOW);
-            this.pwmChannels.put(channel, pin);
+        if (!this.isInitialized) {
+            Gpio.wiringPiSetup();
+
+            for (int i : this.pinConfiguration) {
+                SoftPwm.softPwmCreate(i, 0, 100);
+            }
+
+            this.isInitialized = true;
         }
 
-        GpioPinPwmOutput pin = this.pwmChannels.get(channel);
-        pin.setPwm((int) (value * 1024));
+        SoftPwm.softPwmWrite(this.pinConfiguration[channel], (int) (value * 100));
     }
 }
