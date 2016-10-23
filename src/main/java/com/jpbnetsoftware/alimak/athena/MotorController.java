@@ -7,4 +7,6 @@ public interface MotorController {
     void setValue(float value, int duration);
 
     void refresh();
+
+    void shutdown();
 }

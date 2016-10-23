@@ -10,11 +10,11 @@ public class CarManagerImpl implements CarManager {
 
     private final int RESOLUTION = 10;
 
+    private final MotorController driveController;
+
+    private final MotorController turnController;
+
     private Thread mainThread;
-
-    private MotorController driveController;
-
-    private MotorController turnController;
 
     public CarManagerImpl(MotorController driveController, MotorController turnController) {
         this.driveController = driveController;
@@ -22,15 +22,21 @@ public class CarManagerImpl implements CarManager {
     }
 
     @Override
-    public void drive(float speed, int duration) {
+    public synchronized void drive(float speed, int duration) {
         this.init();
         this.driveController.setValue(speed, duration / RESOLUTION);
     }
 
     @Override
-    public void turn(float turnPercentage, int duration) {
+    public synchronized void turn(float turnPercentage, int duration) {
         this.init();
         this.turnController.setValue(turnPercentage, duration / RESOLUTION);
+    }
+
+    @Override
+    public synchronized void shutdown() {
+        this.driveController.shutdown();
+        this.turnController.shutdown();
     }
 
     private void init() {

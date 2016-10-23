@@ -5,4 +5,6 @@ package com.jpbnetsoftware.alimak.athena;
  */
 public interface PinManager {
     void setPwm(int channel, float value);
+
+    void shutdownPwm(int channel);
 }

@@ -17,6 +17,8 @@ public class PiPinManager implements PinManager {
 
     private boolean isInitialized;
 
+    private boolean isShutdown;
+
     public PiPinManager() {
         this.pinConfiguration = new int[]{0, 1, 2, 3};
     }
@@ -31,6 +33,10 @@ public class PiPinManager implements PinManager {
             throw new IllegalArgumentException("value must be in range [0, 1]");
         }
 
+        if (this.isShutdown) {
+            throw new IllegalStateException("manager has been shutdown");
+        }
+
         if (!this.isInitialized) {
             Gpio.wiringPiSetup();
 
@@ -42,5 +48,18 @@ public class PiPinManager implements PinManager {
         }
 
         SoftPwm.softPwmWrite(this.pinConfiguration[channel], (int) (value * 100));
+    }
+
+    @Override
+    public synchronized void shutdownPwm(int channel) {
+        this.isShutdown = true;
+
+        if (!this.isInitialized) {
+            return;
+        }
+
+        for (int i : this.pinConfiguration) {
+            SoftPwm.softPwmStop(i);
+        }
     }
 }

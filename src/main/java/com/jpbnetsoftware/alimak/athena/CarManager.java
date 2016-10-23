@@ -7,4 +7,6 @@ public interface CarManager {
     void drive(float speed, int duration);
 
     void turn(float turnPercentage, int duration);
+
+    void shutdown();
 }

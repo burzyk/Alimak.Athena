@@ -8,15 +8,15 @@ import com.jpbnetsoftware.alimak.athena.PinManager;
  */
 public class MotorControllerImpl implements MotorController {
 
-    private float value;
-
-    private int duration;
-
     private final int pwmChannelLeft;
 
     private final int pwmChannelRight;
 
-    private PinManager pinManager;
+    private final PinManager pinManager;
+
+    private float value;
+
+    private int duration;
 
     public MotorControllerImpl(int pwmChannelLeft, int pwmChannelRight, PinManager pinManager) {
         this.pwmChannelLeft = pwmChannelLeft;
@@ -45,5 +45,11 @@ public class MotorControllerImpl implements MotorController {
         this.pinManager.setPwm(this.pwmChannelLeft, this.value > 0 ? this.value : 0);
         this.pinManager.setPwm(this.pwmChannelRight, this.value < 0 ? -this.value : 0);
         this.duration -= 1;
+    }
+
+    @Override
+    public synchronized void shutdown() {
+        this.pinManager.shutdownPwm(this.pwmChannelLeft);
+        this.pinManager.shutdownPwm(this.pwmChannelRight);
     }
 }
