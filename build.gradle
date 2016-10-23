@@ -1,12 +1,6 @@
 group 'com.jpbnetsoftware.alimak.athena'
 version '1.0-SNAPSHOT'
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-}
-
 apply plugin: 'java'
 
 repositories {
