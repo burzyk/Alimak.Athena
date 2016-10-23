@@ -2,10 +2,13 @@ group 'com.jpbnetsoftware.alimak.athena'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'application'
 
 repositories {
     mavenCentral()
 }
+
+mainClassName = 'com.jpbnetsoftware.alimak.athena.Program'
 
 dependencies {
     compile 'com.pi4j:pi4j-core:1.1'
