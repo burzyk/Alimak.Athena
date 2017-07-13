@@ -10,6 +10,9 @@ import java.util.Map;
 
 /**
  * Created by pburzynski on 09/10/2016.
+ * 
+ * For pin configuration see: https://projects.drogon.net/raspberry-pi/wiringpi/pins/ 
+ * physical pins 9, 11, 12, 13, 15
  */
 public class PiPinManager implements PinManager {
 
